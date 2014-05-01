@@ -10,7 +10,7 @@ class Csv_model extends CI_Model {
     function get_coauthors() {     
         $this->db->select('*');
         //$this->db->from('author');
-        $get = $this->db->get('author', 20);
+        $get = $this->db->get('author');
         
         if($get->num_rows > 0) return $get->result_array();
         return array();
@@ -19,7 +19,7 @@ class Csv_model extends CI_Model {
     function get_authorlist() {     
         $this->db->select('*');
         //$this->db->from('author');
-        $get = $this->db->get('authorlist', 20);
+        $get = $this->db->get('authorlist',20);
         
         if($get->num_rows > 0) return $get->result_array();
         return array();
@@ -29,7 +29,7 @@ class Csv_model extends CI_Model {
         $this->db->select('id');
         $this->db->where('author', $authorname);
         
-        $query = $this->db->get('authorlist');
+        $query = $this->db->get('authorlist',20);
         if($query->num_rows > 0) {$ret = $query->row();
         return $ret->id;}
         else{return '0';}

@@ -1,9 +1,4 @@
-<html>
-<head>
-<title>Upload Form</title>
-</head>
-<body>
-
+<p>The data must be in exactly the right format to work. Use the CSV file <a href="">here</a> as a template.</p>
 <?php echo $error;?>
 
 <?php echo form_open_multipart('uploadauthors/do_upload');?>
@@ -12,9 +7,6 @@
 
 <br /><br />
 
-<input type="submit" value="upload" />
+<input type="submit" value="upload" class="btn btn-warning"/>
 
 </form>
-
-</body>
-</html>

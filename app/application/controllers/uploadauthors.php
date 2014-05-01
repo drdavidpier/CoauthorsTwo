@@ -10,6 +10,8 @@ class Uploadauthors extends CI_Controller {
 
 	function index()
 	{
+	    $this->title = 'Upload Author List';
+        $this->menu = '';
 		$this->load->view('upload_authors', array('error' => ' ' ));
 	}
 

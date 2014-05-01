@@ -9,7 +9,12 @@
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
-
+$hook['display_override'] = array(
+    'class' => 'Layout',
+    'function' => 'index',
+    'filename' => 'Layout.php',
+    'filepath' => 'hooks'
+);
 
 
 /* End of file hooks.php */

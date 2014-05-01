@@ -10,6 +10,8 @@ class Upload extends CI_Controller {
 
 	function index()
 	{
+		$this->title = 'CSV to Gephi';
+        $this->menu = '';
 		$this->load->view('upload_form', array('error' => ' ' ));
 	}
 
