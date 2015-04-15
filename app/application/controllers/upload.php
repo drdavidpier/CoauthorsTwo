@@ -69,6 +69,19 @@ class Upload extends CI_Controller {
                         'author25'=>$row['author25'],
                         'author26'=>$row['author26'],
                         'author27'=>$row['author27'],
+                        'author28'=>$row['author28'],
+                        'author29'=>$row['author29'],
+                        'author30'=>$row['author30'],
+                        'author31'=>$row['author31'],
+                        'author32'=>$row['author32'],
+                        'author33'=>$row['author33'],
+                        'author34'=>$row['author34'],
+                        'author35'=>$row['author35'],
+                        'author36'=>$row['author36'],
+                        'author37'=>$row['author37'],
+                        'author38'=>$row['author38'],
+                        'count'=>$row['count'],
+                        
                     );
                     $this->load->model('csv_model');
                     $this->csv_model->insert_csv($insert_data);

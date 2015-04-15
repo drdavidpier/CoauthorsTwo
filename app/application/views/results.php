@@ -15,14 +15,17 @@
 	        echo '<strong>Author of interest</strong>'.' - '.$list['author'];
 	        echo '<br />';
 	        foreach($coauthors as $key => $co){
-	            if(array_search($list['author'], $co)){
+	            
+                $searchword = $list['author'];
+                $matches = array_filter($co, function($var) use ($searchword) { return preg_match("/\b$searchword/i", $var); });
+	            
+	            if($matches){
+	            //if(array_search($list['author'], $co)){
 	                //put the results in a table
 	                $this->table->add_row($co);
 	                echo $this->table->generate();
-
-
 	            }
-	        }
+	       }
 	        echo '<hr>';
 	    }
 ?>

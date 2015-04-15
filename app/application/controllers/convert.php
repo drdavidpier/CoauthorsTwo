@@ -10,6 +10,8 @@ class Convert extends CI_Controller {
 
 	function index()
 	{
+        @set_time_limit(-1);
+        
 	    $this->title = 'Convert and Review';
         $this->menu = '';
 	    
@@ -19,7 +21,7 @@ class Convert extends CI_Controller {
 	    //get co author list - this will give a long list of null for most
 	    $coauthors = $this->csv_model->get_coauthors();
 	    $tabledata['coauthors'] = $coauthors;
-	    //get long list of suthors
+	    //get long list of authors
 	    $authors = $this->csv_model->get_authorlist();
 	    $tabledata['authors'] = $authors;
 	    
@@ -29,42 +31,89 @@ class Convert extends CI_Controller {
 	    
 	    //loop through the authors and see in which coauthor groups they appear
 	    foreach($authors as $key => $list){
-	        //echo '<strong>Author of interest</strong>'.' - '.$list['author'];
-	        //echo '<br />';
-	        foreach($coauthors as $key => $co){
-	            if(array_search($list['author'], $co)){
-	                //put the results in a table
-	                //$this->table->add_row($co);
-	                //echo $this->table->generate();
-
+            $searchword = $list['author'];
+	    
+            foreach($coauthors as $key => $co){
+	            //if(array_search($list['author'], $co)){
+	            
+                $matches = array_filter($co, function($var) use ($searchword) { return preg_match("/\b$searchword/i", $var); });
+                        
+                echo '<h2>';
+                echo $co['id'];
+                echo '</h2>';
+                
+	            if($matches){
+                
 	                foreach($co as $coauthorlist){
 	                    //get the author id from their name. If no name passed return a result of zero
-	                    $authoriddata = $this->csv_model->get_author_id($coauthorlist);
-	                    //if author id is valid then insert into database
+	                    //$authoriddata = (int) $this->csv_model->get_author_id($coauthorlist); //THIS DOES NOT WORK BECAUSE IT IS USING LONG AUTHORNAME TO LOOK FOR SHORT AUTHOR NAME - ARSE!!!!
+                        //instead go through the cleaned author list AGAIN and find the author
+                        
+                        $authoriddata = 0;
+                        
+                        foreach($authors as $key => $shortauthornames){
+                            //echo $shortauthornames['author'];
+                            $finalmatch = strpos($coauthorlist, $shortauthornames['author']);
+
+                            //var_dump($finalmatch);
+
+                            if($finalmatch === 0){
+                                $authoriddata = (int) $this->csv_model->get_author_id($shortauthornames['author']);
+                            }
+                        }
+                        
+	                    //if author id is valid then insert into database 
+
+                        echo $authoriddata;
+                        echo '<br />';
+
 	                    if($authoriddata > 0){
+                            
 	                        //check if author pair already exist and add to edge weight
-	                        $pair_exist = $this->csv_model->get_author_pair($authoriddata, $list['id']);
+                            echo "pair coauthor - ";
+                            var_dump($authoriddata);
+                            echo '<br />';
+                            echo " author - ";
+                            $listid = (int) $list['id'];
+                            var_dump($listid);
+                            echo '<br />';
+                            
+                            //$authoriddata = 1;
+                            //$listid = 1;
+                            
+	                        $pair_exist = $this->csv_model->get_author_pair($authoriddata, $listid);
+	                        $pair_exist = (int) $pair_exist;
+                            echo "pair exists? - ";
+                            var_dump($pair_exist);
 	                        
-	                        if($pair_exist > 0){
-	                        $data = array(
-                                'source' => $list['id'],
+                            if($pair_exist > 0){
+	                        $dataa = array(
+                                'source' => $listid,
                                 'target'=> $authoriddata,
                                 'weight'=> $pair_exist + 1,
                             );
-                            $this->csv_model->update_edge($authoriddata, $list['id'], $data);
+                                echo '<br />';
+                                echo "boom";
+                                echo "<hr>";
+                            $this->csv_model->update_edge($authoriddata, $listid, $dataa);
 	                        }else{
-	                           $data = array(
-                                'source' => $list['id'],
+	                           $data3 = array(
+                                'source' => $listid,
                                 'target'=> $authoriddata,
                                 'weight'=> '1',
                             );
-                            $this->csv_model->insert_edge($data); 
+                                echo '<br />';
+                                echo "nope";
+                                echo '<hr />';
+                            $this->csv_model->insert_edge($data3); 
 	                        }
 	                    }
+                        
+                        
 	                }
 	            }
+                echo "end of code";
 	        }
-	        //echo '<hr>';
 	    }
 	    $this->load->view('results', $tabledata);
 
